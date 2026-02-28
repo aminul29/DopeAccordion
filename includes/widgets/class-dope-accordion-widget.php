@@ -613,7 +613,7 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'type'      => Controls_Manager::COLOR,
                 'default'   => '#2563eb',
                 'selectors' => array(
-                    '{{WRAPPER}} .da-desc-toggle' => 'color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle' => 'color: {{VALUE}} !important;',
                 ),
             )
         );
@@ -625,7 +625,7 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'type'      => Controls_Manager::COLOR,
                 'default'   => '#1d4ed8',
                 'selectors' => array(
-                    '{{WRAPPER}} .da-desc-toggle:hover, {{WRAPPER}} .da-desc-toggle:focus, {{WRAPPER}} .da-desc-toggle:active' => 'color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle:hover, {{WRAPPER}} .da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle:focus, {{WRAPPER}} .da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle:active' => 'color: {{VALUE}} !important;',
                 ),
             )
         );
@@ -634,7 +634,7 @@ class Dope_Accordion_Widget extends Widget_Base {
             Group_Control_Typography::get_type(),
             array(
                 'name'     => 'read_more_typography',
-                'selector' => '{{WRAPPER}} .da-desc-toggle',
+                'selector' => '{{WRAPPER}} .da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle',
             )
         );
 
