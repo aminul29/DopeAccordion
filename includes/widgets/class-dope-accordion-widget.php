@@ -43,114 +43,12 @@ class Dope_Accordion_Widget extends Widget_Base {
     }
 
     protected function register_controls(): void {
-        $this->register_content_controls();
+        $this->register_items_controls();
+        $this->register_settings_controls();
         $this->register_style_controls();
     }
 
-    private function register_content_controls(): void {
-        $this->start_controls_section(
-            'section_settings',
-            array(
-                'label' => esc_html__( 'Accordion Settings', 'dope-accordion' ),
-                'tab'   => Controls_Manager::TAB_CONTENT,
-            )
-        );
-
-        $this->add_control(
-            'first_item_open',
-            array(
-                'label'        => esc_html__( 'First Item Open By Default', 'dope-accordion' ),
-                'type'         => Controls_Manager::SWITCHER,
-                'default'      => 'yes',
-                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
-                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
-                'return_value' => 'yes',
-            )
-        );
-
-        $this->add_control(
-            'allow_multiple_open',
-            array(
-                'label'        => esc_html__( 'Allow Multiple Open Items', 'dope-accordion' ),
-                'type'         => Controls_Manager::SWITCHER,
-                'default'      => '',
-                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
-                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
-                'return_value' => 'yes',
-            )
-        );
-
-        $this->add_control(
-            'allow_collapse',
-            array(
-                'label'        => esc_html__( 'Allow Closing Open Item', 'dope-accordion' ),
-                'type'         => Controls_Manager::SWITCHER,
-                'default'      => 'yes',
-                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
-                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
-                'return_value' => 'yes',
-            )
-        );
-
-        $this->add_control(
-            'link_target_default',
-            array(
-                'label'   => esc_html__( 'Default Link Target', 'dope-accordion' ),
-                'type'    => Controls_Manager::SELECT,
-                'default' => '_self',
-                'options' => array(
-                    '_self'  => esc_html__( 'Current Tab', 'dope-accordion' ),
-                    '_blank' => esc_html__( 'New Tab', 'dope-accordion' ),
-                ),
-            )
-        );
-
-        $this->add_control(
-            'icon_position',
-            array(
-                'label'   => esc_html__( 'Toggle Icon Position', 'dope-accordion' ),
-                'type'    => Controls_Manager::CHOOSE,
-                'options' => array(
-                    'left'  => array(
-                        'title' => esc_html__( 'Left', 'dope-accordion' ),
-                        'icon'  => 'eicon-h-align-left',
-                    ),
-                    'right' => array(
-                        'title' => esc_html__( 'Right', 'dope-accordion' ),
-                        'icon'  => 'eicon-h-align-right',
-                    ),
-                ),
-                'default' => 'left',
-                'toggle'  => false,
-            )
-        );
-
-        $this->add_control(
-            'icon_collapsed',
-            array(
-                'label'   => esc_html__( 'Collapsed Icon', 'dope-accordion' ),
-                'type'    => Controls_Manager::ICONS,
-                'default' => array(
-                    'value'   => 'fas fa-plus',
-                    'library' => 'fa-solid',
-                ),
-            )
-        );
-
-        $this->add_control(
-            'icon_expanded',
-            array(
-                'label'   => esc_html__( 'Expanded Icon', 'dope-accordion' ),
-                'type'    => Controls_Manager::ICONS,
-                'default' => array(
-                    'value'   => 'fas fa-minus',
-                    'library' => 'fa-solid',
-                ),
-            )
-        );
-
-        $this->end_controls_section();
-
+    private function register_items_controls(): void {
         $this->start_controls_section(
             'section_items',
             array(
@@ -282,6 +180,111 @@ class Dope_Accordion_Widget extends Widget_Base {
                     ),
                 ),
                 'title_field' => '{{{ item_title }}}',
+            )
+        );
+
+        $this->end_controls_section();
+    }
+
+    private function register_settings_controls(): void {
+        $this->start_controls_section(
+            'section_settings',
+            array(
+                'label' => esc_html__( 'Accordion Settings', 'dope-accordion' ),
+                'tab'   => Controls_Manager::TAB_CONTENT,
+            )
+        );
+
+        $this->add_control(
+            'first_item_open',
+            array(
+                'label'        => esc_html__( 'First Item Open By Default', 'dope-accordion' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
+                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
+                'return_value' => 'yes',
+            )
+        );
+
+        $this->add_control(
+            'allow_multiple_open',
+            array(
+                'label'        => esc_html__( 'Allow Multiple Open Items', 'dope-accordion' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'default'      => '',
+                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
+                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
+                'return_value' => 'yes',
+            )
+        );
+
+        $this->add_control(
+            'allow_collapse',
+            array(
+                'label'        => esc_html__( 'Allow Closing Open Item', 'dope-accordion' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
+                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
+                'return_value' => 'yes',
+            )
+        );
+
+        $this->add_control(
+            'link_target_default',
+            array(
+                'label'   => esc_html__( 'Default Link Target', 'dope-accordion' ),
+                'type'    => Controls_Manager::SELECT,
+                'default' => '_self',
+                'options' => array(
+                    '_self'  => esc_html__( 'Current Tab', 'dope-accordion' ),
+                    '_blank' => esc_html__( 'New Tab', 'dope-accordion' ),
+                ),
+            )
+        );
+
+        $this->add_control(
+            'icon_position',
+            array(
+                'label'   => esc_html__( 'Toggle Icon Position', 'dope-accordion' ),
+                'type'    => Controls_Manager::CHOOSE,
+                'options' => array(
+                    'left'  => array(
+                        'title' => esc_html__( 'Left', 'dope-accordion' ),
+                        'icon'  => 'eicon-h-align-left',
+                    ),
+                    'right' => array(
+                        'title' => esc_html__( 'Right', 'dope-accordion' ),
+                        'icon'  => 'eicon-h-align-right',
+                    ),
+                ),
+                'default' => 'left',
+                'toggle'  => false,
+            )
+        );
+
+        $this->add_control(
+            'icon_collapsed',
+            array(
+                'label'   => esc_html__( 'Collapsed Icon', 'dope-accordion' ),
+                'type'    => Controls_Manager::ICONS,
+                'default' => array(
+                    'value'   => 'fas fa-plus',
+                    'library' => 'fa-solid',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'icon_expanded',
+            array(
+                'label'   => esc_html__( 'Expanded Icon', 'dope-accordion' ),
+                'type'    => Controls_Manager::ICONS,
+                'default' => array(
+                    'value'   => 'fas fa-minus',
+                    'library' => 'fa-solid',
+                ),
             )
         );
 
