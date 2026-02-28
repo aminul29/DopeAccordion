@@ -70,6 +70,16 @@ class Dope_Accordion_Widget extends Widget_Base {
         );
 
         $repeater->add_control(
+            'item_position',
+            array(
+                'label'       => esc_html__( 'Position', 'dope-accordion' ),
+                'type'        => Controls_Manager::TEXT,
+                'placeholder' => esc_html__( 'Consultant | Aug 2024 - Present', 'dope-accordion' ),
+                'label_block' => true,
+            )
+        );
+
+        $repeater->add_control(
             'item_content',
             array(
                 'label'   => esc_html__( 'Content', 'dope-accordion' ),
@@ -225,6 +235,60 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
                 'label_off'    => esc_html__( 'No', 'dope-accordion' ),
                 'return_value' => 'yes',
+            )
+        );
+
+        $this->add_control(
+            'top_desc_limit_enabled',
+            array(
+                'label'        => esc_html__( 'Limit Description Characters', 'dope-accordion' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'default'      => 'yes',
+                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
+                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
+                'return_value' => 'yes',
+                'condition'    => array(
+                    'layout_variant' => 'top_image',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'top_desc_char_limit',
+            array(
+                'label'     => esc_html__( 'Description Character Limit', 'dope-accordion' ),
+                'type'      => Controls_Manager::NUMBER,
+                'default'   => 220,
+                'min'       => 20,
+                'step'      => 1,
+                'condition' => array(
+                    'layout_variant'        => 'top_image',
+                    'top_desc_limit_enabled' => 'yes',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'top_desc_read_more_label',
+            array(
+                'label'     => esc_html__( 'Read More Label', 'dope-accordion' ),
+                'type'      => Controls_Manager::TEXT,
+                'default'   => esc_html__( 'see more', 'dope-accordion' ),
+                'condition' => array(
+                    'layout_variant' => 'top_image',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'top_desc_read_less_label',
+            array(
+                'label'     => esc_html__( 'Read Less Label', 'dope-accordion' ),
+                'type'      => Controls_Manager::TEXT,
+                'default'   => esc_html__( 'see less', 'dope-accordion' ),
+                'condition' => array(
+                    'layout_variant' => 'top_image',
+                ),
             )
         );
 
@@ -631,7 +695,12 @@ class Dope_Accordion_Widget extends Widget_Base {
 
     protected function render(): void {
         $settings = $this->get_settings_for_display();
-        $layout_variant = ! empty( $settings['layout_variant'] ) ? $settings['layout_variant'] : 'default';
+        $layout_variant      = ! empty( $settings['layout_variant'] ) ? $settings['layout_variant'] : 'default';
+        $limit_enabled       = ( ! empty( $settings['top_desc_limit_enabled'] ) && 'yes' === $settings['top_desc_limit_enabled'] );
+        $desc_char_limit     = ! empty( $settings['top_desc_char_limit'] ) ? (int) $settings['top_desc_char_limit'] : 220;
+        $desc_char_limit     = max( 20, $desc_char_limit );
+        $read_more_label     = ! empty( $settings['top_desc_read_more_label'] ) ? (string) $settings['top_desc_read_more_label'] : esc_html__( 'see more', 'dope-accordion' );
+        $read_less_label     = ! empty( $settings['top_desc_read_less_label'] ) ? (string) $settings['top_desc_read_less_label'] : esc_html__( 'see less', 'dope-accordion' );
         $open_all_by_default = ( ! empty( $settings['open_all_by_default'] ) && 'yes' === $settings['open_all_by_default'] );
 
         if ( empty( $settings['items'] ) || ! is_array( $settings['items'] ) ) {
@@ -650,6 +719,10 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'data-icon-position'  => ! empty( $settings['icon_position'] ) ? $settings['icon_position'] : 'left',
                 'data-layout'         => $layout_variant,
                 'data-open-all'       => $open_all_by_default ? '1' : '0',
+                'data-top-desc-limit-enabled' => $limit_enabled ? '1' : '0',
+                'data-top-desc-char-limit'    => (string) $desc_char_limit,
+                'data-top-read-more-label'    => $read_more_label,
+                'data-top-read-less-label'    => $read_less_label,
             )
         );
 
@@ -663,33 +736,38 @@ class Dope_Accordion_Widget extends Widget_Base {
             $is_first     = 0 === $index;
             $open_default = $open_all_by_default || ( $is_first && ( 'yes' === $settings['first_item_open'] ) );
             $top_image_url = ! empty( $item['item_top_image']['url'] ) ? $item['item_top_image']['url'] : '';
+            $position      = ! empty( $item['item_position'] ) ? (string) $item['item_position'] : '';
+            $is_top_layout = 'top_image' === $layout_variant;
 
             echo '<div class="da-item' . ( $open_default ? ' is-open' : '' ) . '">';
+
+            if ( $is_top_layout && ! empty( $top_image_url ) ) {
+                echo '<div class="da-top-image-block">';
+                echo '<img class="da-top-image" src="' . esc_url( $top_image_url ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
+                echo '</div>';
+            }
+
             echo '<button class="da-header" id="' . esc_attr( $button_id ) . '" type="button" aria-controls="' . esc_attr( $panel_id ) . '" aria-expanded="' . ( $open_default ? 'true' : 'false' ) . '">';
 
             $this->render_toggle_icon( $settings, $open_default );
 
-            if ( 'top_image' === $layout_variant ) {
-                echo '<span class="da-header-content">';
-
-                if ( ! empty( $top_image_url ) ) {
-                    echo '<span class="da-top-image-wrap">';
-                    echo '<img class="da-top-image" src="' . esc_url( $top_image_url ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
-                    echo '</span>';
-                }
-
-                echo '<span class="da-title">' . esc_html( $title ) . '</span>';
-                echo '</span>';
-            } else {
-                echo '<span class="da-title">' . esc_html( $title ) . '</span>';
-            }
+            echo '<span class="da-title">' . esc_html( $title ) . '</span>';
             echo '</button>';
 
             echo '<div class="da-panel" id="' . esc_attr( $panel_id ) . '" role="region" aria-labelledby="' . esc_attr( $button_id ) . '"' . ( $open_default ? '' : ' hidden' ) . '>';
             echo '<div class="da-content-wrap">';
-            echo '<div class="da-content">' . wp_kses_post( $content ) . '</div>';
 
-            $this->render_media( $item, $settings );
+            if ( $is_top_layout ) {
+                if ( ! empty( $position ) ) {
+                    echo '<div class="da-top-position">' . esc_html( $position ) . '</div>';
+                }
+
+                $this->render_top_image_description( $content, $settings, $button_id, $panel_id, $index );
+                $this->render_media( $item, $settings );
+            } else {
+                echo '<div class="da-content">' . wp_kses_post( $content ) . '</div>';
+                $this->render_media( $item, $settings );
+            }
 
             echo '</div>';
             echo '</div>';
@@ -743,18 +821,21 @@ class Dope_Accordion_Widget extends Widget_Base {
             if ( ! empty( $item['item_image']['url'] ) ) {
                 $single_image_id   = ! empty( $item['item_image']['id'] ) ? (int) $item['item_image']['id'] : 0;
                 $single_image_link = $this->get_media_link_by_id( $single_image_id );
+                $single_image_url  = (string) $item['item_image']['url'];
 
                 if ( $single_image_id > 0 ) {
                     $used_attachment_ids[] = $single_image_id;
                 }
 
-                $this->render_media_card(
-                    '<img class="da-media da-media-image" src="' . esc_url( $item['item_image']['url'] ) . '" alt="' . esc_attr( $item['item_media_caption'] ?? '' ) . '" loading="lazy" />',
-                    $item,
-                    ! empty( $single_image_link ) ? $single_image_link : $link_url,
-                    $target,
-                    $rel_attr
-                );
+                if ( ! $this->should_skip_top_image_duplicate( $item, $single_image_id, $single_image_url, $settings ) ) {
+                    $this->render_media_card(
+                        '<img class="da-media da-media-image" src="' . esc_url( $single_image_url ) . '" alt="' . esc_attr( $item['item_media_caption'] ?? '' ) . '" loading="lazy" />',
+                        $item,
+                        ! empty( $single_image_link ) ? $single_image_link : $link_url,
+                        $target,
+                        $rel_attr
+                    );
+                }
             }
 
             if ( ! empty( $gallery ) ) {
@@ -763,7 +844,11 @@ class Dope_Accordion_Widget extends Widget_Base {
                         continue;
                     }
                     $gallery_id = ! empty( $gallery_item['id'] ) ? (int) $gallery_item['id'] : 0;
+                    $gallery_url = (string) $gallery_item['url'];
                     if ( $gallery_id > 0 && in_array( $gallery_id, $used_attachment_ids, true ) ) {
+                        continue;
+                    }
+                    if ( $this->should_skip_top_image_duplicate( $item, $gallery_id, $gallery_url, $settings ) ) {
                         continue;
                     }
                     $card_link  = $this->get_media_link_by_id( $gallery_id );
@@ -776,7 +861,7 @@ class Dope_Accordion_Widget extends Widget_Base {
                     }
 
                     $this->render_media_card(
-                        '<img class="da-media da-media-image" src="' . esc_url( $gallery_item['url'] ) . '" alt="' . esc_attr( $item['item_media_caption'] ?? '' ) . '" loading="lazy" />',
+                        '<img class="da-media da-media-image" src="' . esc_url( $gallery_url ) . '" alt="' . esc_attr( $item['item_media_caption'] ?? '' ) . '" loading="lazy" />',
                         $item,
                         $card_link,
                         $target,
@@ -806,6 +891,182 @@ class Dope_Accordion_Widget extends Widget_Base {
         }
 
         echo '</div>';
+    }
+
+    private function render_top_image_description( string $content, array $settings, string $button_id, string $panel_id, int $index ): void {
+        $allowed_tags = $this->get_description_allowed_tags();
+        $full_html    = wp_kses( $content, $allowed_tags );
+        $text_length  = $this->get_string_length( wp_strip_all_tags( $full_html ) );
+
+        if ( 0 === $text_length ) {
+            return;
+        }
+
+        $limit_enabled   = ! empty( $settings['top_desc_limit_enabled'] ) && 'yes' === $settings['top_desc_limit_enabled'];
+        $char_limit      = ! empty( $settings['top_desc_char_limit'] ) ? (int) $settings['top_desc_char_limit'] : 220;
+        $char_limit      = max( 20, $char_limit );
+        $read_more_label = ! empty( $settings['top_desc_read_more_label'] ) ? (string) $settings['top_desc_read_more_label'] : esc_html__( 'see more', 'dope-accordion' );
+        $desc_id_base    = sanitize_html_class( $button_id . '-' . $panel_id . '-' . $index );
+
+        echo '<div class="da-top-description">';
+
+        if ( $limit_enabled && $text_length > $char_limit ) {
+            $truncated = $this->truncate_html_by_chars( $full_html, $char_limit );
+
+            echo '<div class="da-content da-desc-preview">' . $truncated['html'] . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo '<div class="da-content da-desc-full" id="da-desc-full-' . esc_attr( $desc_id_base ) . '" hidden>' . $full_html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo '<button class="da-desc-toggle" type="button" aria-expanded="false" aria-controls="da-desc-full-' . esc_attr( $desc_id_base ) . '">' . esc_html( $read_more_label ) . '</button>';
+        } else {
+            echo '<div class="da-content da-desc-full">' . $full_html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        }
+
+        echo '</div>';
+    }
+
+    private function get_description_allowed_tags(): array {
+        return array(
+            'p'      => array(),
+            'ul'     => array(),
+            'ol'     => array(),
+            'li'     => array(),
+            'strong' => array(),
+            'b'      => array(),
+            'em'     => array(),
+            'i'      => array(),
+            'a'      => array(
+                'href'   => true,
+                'target' => true,
+                'rel'    => true,
+                'title'  => true,
+            ),
+            'br'     => array(),
+        );
+    }
+
+    private function truncate_html_by_chars( string $html, int $limit ): array {
+        $tokens       = wp_html_split( $html );
+        $void_tags    = array( 'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr' );
+        $open_tags    = array();
+        $output       = '';
+        $char_count   = 0;
+        $is_truncated = false;
+
+        foreach ( $tokens as $token ) {
+            if ( '' === $token ) {
+                continue;
+            }
+
+            if ( $char_count >= $limit ) {
+                $is_truncated = true;
+                break;
+            }
+
+            if ( '<' === substr( $token, 0, 1 ) ) {
+                if ( preg_match( '/^<\s*\/\s*([a-z0-9]+)/i', $token, $close_match ) ) {
+                    $tag = strtolower( $close_match[1] );
+                    for ( $i = count( $open_tags ) - 1; $i >= 0; $i-- ) {
+                        if ( $open_tags[ $i ] === $tag ) {
+                            array_splice( $open_tags, $i, 1 );
+                            break;
+                        }
+                    }
+                    $output .= $token;
+                    continue;
+                }
+
+                if ( preg_match( '/^<\s*([a-z0-9]+)/i', $token, $open_match ) ) {
+                    $tag            = strtolower( $open_match[1] );
+                    $trimmed_token  = trim( $token );
+                    $is_self_closed = '/>' === substr( $trimmed_token, -2 ) || in_array( $tag, $void_tags, true );
+
+                    if ( ! $is_self_closed ) {
+                        $open_tags[] = $tag;
+                    }
+                }
+
+                $output .= $token;
+                continue;
+            }
+
+            $decoded_token = html_entity_decode( $token, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+            $token_length  = $this->get_string_length( $decoded_token );
+            $remaining     = $limit - $char_count;
+
+            if ( $token_length <= $remaining ) {
+                $output     .= $token;
+                $char_count += $token_length;
+                continue;
+            }
+
+            $snippet       = $this->get_string_substr( $decoded_token, 0, $remaining );
+            $output       .= esc_html( $snippet ) . '&hellip;';
+            $char_count    = $limit;
+            $is_truncated  = true;
+            break;
+        }
+
+        if ( $char_count >= $limit ) {
+            $is_truncated = true;
+        }
+
+        if ( $is_truncated ) {
+            for ( $i = count( $open_tags ) - 1; $i >= 0; $i-- ) {
+                $output .= '</' . $open_tags[ $i ] . '>';
+            }
+        }
+
+        return array(
+            'html'         => $output,
+            'is_truncated' => $is_truncated,
+        );
+    }
+
+    private function get_string_length( string $value ): int {
+        if ( function_exists( 'mb_strlen' ) ) {
+            return (int) mb_strlen( $value, 'UTF-8' );
+        }
+
+        return strlen( $value );
+    }
+
+    private function get_string_substr( string $value, int $start, int $length ): string {
+        if ( function_exists( 'mb_substr' ) ) {
+            return (string) mb_substr( $value, $start, $length, 'UTF-8' );
+        }
+
+        return (string) substr( $value, $start, $length );
+    }
+
+    private function should_skip_top_image_duplicate( array $item, int $media_id, string $media_url, array $settings ): bool {
+        if ( empty( $settings['layout_variant'] ) || 'top_image' !== $settings['layout_variant'] ) {
+            return false;
+        }
+
+        $top_image_id  = ! empty( $item['item_top_image']['id'] ) ? (int) $item['item_top_image']['id'] : 0;
+        $top_image_url = ! empty( $item['item_top_image']['url'] ) ? (string) $item['item_top_image']['url'] : '';
+
+        if ( $top_image_id > 0 && $media_id > 0 ) {
+            return $top_image_id === $media_id;
+        }
+
+        if ( '' === $top_image_url || '' === $media_url ) {
+            return false;
+        }
+
+        return $this->normalize_url_for_compare( $top_image_url ) === $this->normalize_url_for_compare( $media_url );
+    }
+
+    private function normalize_url_for_compare( string $url ): string {
+        $url = trim( (string) $url );
+        $url = esc_url_raw( $url );
+
+        if ( '' === $url ) {
+            return '';
+        }
+
+        $url = (string) strtok( $url, '?' );
+
+        return strtolower( untrailingslashit( $url ) );
     }
 
     private function render_media_card( string $inner_html, array $item, string $link_url, string $target, string $rel_attr ): void {

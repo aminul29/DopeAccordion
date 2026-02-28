@@ -8,6 +8,9 @@ Custom Elementor accordion widget plugin with:
 - Accordion behavior controls (first open, multiple open, collapse)
 - Open all items by default option (initial state; users can still collapse)
 - Widget-level layout variants including a Top Image layout with per-item top image/logo
+- Top Image layout supports a per-item Position field rendered under the title
+- Top Image layout supports optional description character limiting with configurable read more/read less labels
+- In Top Image layout, top image renders outside the title toggle row and duplicate top image cards are auto-excluded from media grid
 - Style controls for container, header, content, and media cards
 - Smooth expand/collapse animation
 

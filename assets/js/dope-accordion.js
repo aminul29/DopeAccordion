@@ -186,6 +186,45 @@
         setItemState(item, nextOpen);
       });
     });
+
+    initDescriptionToggles(accordion);
+  }
+
+  function initDescriptionToggles(accordion) {
+    const readMoreLabel = accordion.dataset.topReadMoreLabel || 'see more';
+    const readLessLabel = accordion.dataset.topReadLessLabel || 'see less';
+
+    accordion.querySelectorAll('.da-desc-toggle').forEach(function (toggleButton) {
+      if (toggleButton.dataset.ready === '1') {
+        return;
+      }
+
+      toggleButton.dataset.ready = '1';
+      toggleButton.textContent = readMoreLabel;
+      toggleButton.setAttribute('aria-expanded', 'false');
+
+      toggleButton.addEventListener('click', function () {
+        const description = toggleButton.closest('.da-top-description');
+        if (!description) {
+          return;
+        }
+
+        const preview = description.querySelector('.da-desc-preview');
+        const full = description.querySelector('.da-desc-full');
+
+        if (!preview || !full) {
+          return;
+        }
+
+        const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+        const nextExpanded = !isExpanded;
+
+        preview.hidden = nextExpanded;
+        full.hidden = !nextExpanded;
+        toggleButton.setAttribute('aria-expanded', nextExpanded ? 'true' : 'false');
+        toggleButton.textContent = nextExpanded ? readLessLabel : readMoreLabel;
+      });
+    });
   }
 
   function boot() {
