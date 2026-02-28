@@ -7,47 +7,60 @@
   border-bottom: 2px solid #6aa6ff;
 }
 
-.da-header {
+.da-accordion .da-header,
+.da-accordion button.da-header {
   -webkit-appearance: none;
   appearance: none;
   align-items: center;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  color: inherit;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: inherit !important;
   cursor: pointer;
   display: flex;
   float: none;
   gap: 10px;
-  font: inherit;
-  font-size: inherit;
-  font-weight: inherit;
+  font: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
   justify-content: flex-start;
-  letter-spacing: normal;
-  line-height: inherit;
-  margin: 0;
+  letter-spacing: normal !important;
+  line-height: inherit !important;
+  margin: 0 !important;
   max-width: none;
   min-height: 0;
-  outline: none;
-  padding: 16px 0;
+  outline: none !important;
+  padding: 16px 0 !important;
   position: static;
-  text-decoration: none;
+  text-decoration: none !important;
   text-align: left;
-  text-transform: none;
-  transition: none;
+  text-transform: none !important;
+  transition: none !important;
   white-space: normal;
   width: 100%;
 }
 
-.da-header:hover,
-.da-header:focus,
-.da-header:active {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  color: inherit;
-  text-decoration: none;
+.da-accordion .da-header:hover,
+.da-accordion .da-header:focus,
+.da-accordion .da-header:active,
+.da-accordion button.da-header:hover,
+.da-accordion button.da-header:focus,
+.da-accordion button.da-header:active {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.da-accordion .da-header::before,
+.da-accordion .da-header::after,
+.da-accordion button.da-header::before,
+.da-accordion button.da-header::after {
+  content: none !important;
+  display: none !important;
 }
 
 .da-accordion[data-icon-position="right"] .da-header {
