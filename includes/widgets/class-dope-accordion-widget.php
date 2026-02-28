@@ -596,6 +596,51 @@ class Dope_Accordion_Widget extends Widget_Base {
         $this->end_controls_section();
 
         $this->start_controls_section(
+            'section_style_read_more',
+            array(
+                'label'     => esc_html__( 'Read More Button', 'dope-accordion' ),
+                'tab'       => Controls_Manager::TAB_STYLE,
+                'condition' => array(
+                    'layout_variant' => 'top_image',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'read_more_color',
+            array(
+                'label'     => esc_html__( 'Color', 'dope-accordion' ),
+                'type'      => Controls_Manager::COLOR,
+                'default'   => '#2563eb',
+                'selectors' => array(
+                    '{{WRAPPER}} .da-desc-toggle' => 'color: {{VALUE}} !important;',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'read_more_hover_color',
+            array(
+                'label'     => esc_html__( 'Hover Color', 'dope-accordion' ),
+                'type'      => Controls_Manager::COLOR,
+                'default'   => '#1d4ed8',
+                'selectors' => array(
+                    '{{WRAPPER}} .da-desc-toggle:hover, {{WRAPPER}} .da-desc-toggle:focus, {{WRAPPER}} .da-desc-toggle:active' => 'color: {{VALUE}} !important;',
+                ),
+            )
+        );
+
+        $this->add_group_control(
+            Group_Control_Typography::get_type(),
+            array(
+                'name'     => 'read_more_typography',
+                'selector' => '{{WRAPPER}} .da-desc-toggle',
+            )
+        );
+
+        $this->end_controls_section();
+
+        $this->start_controls_section(
             'section_style_media',
             array(
                 'label' => esc_html__( 'Media Card', 'dope-accordion' ),

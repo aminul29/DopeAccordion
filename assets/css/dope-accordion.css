@@ -139,24 +139,25 @@
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  color: #2563eb !important;
   cursor: pointer;
   display: inline !important;
   float: none !important;
-  font: inherit !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  letter-spacing: normal !important;
-  line-height: inherit !important;
   margin: 0 !important;
   max-width: none !important;
   min-height: 0 !important;
   outline: none !important;
   padding: 0 !important;
-  text-decoration: none !important;
   text-transform: none !important;
   vertical-align: baseline;
   width: auto !important;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle {
+  color: #2563eb;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
 }
 
 .da-accordion[data-layout="top_image"] .da-top-description button.da-desc-toggle::before,
