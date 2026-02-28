@@ -83,16 +83,18 @@
 
 .da-accordion[data-layout="top_image"] .da-header-content {
   align-items: flex-start;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   gap: 10px;
   min-width: 0;
+  width: 100%;
 }
 
 .da-accordion[data-layout="top_image"] .da-top-image-wrap {
   display: inline-flex;
   line-height: 0;
   max-width: 240px;
+  order: 1;
 }
 
 .da-accordion[data-layout="top_image"] .da-top-image {
@@ -102,6 +104,10 @@
   max-width: 100%;
   object-fit: contain;
   width: auto;
+}
+
+.da-accordion[data-layout="top_image"] .da-title {
+  order: 2;
 }
 
 .da-toggle-icon {
