@@ -8,17 +8,46 @@
 }
 
 .da-header {
+  -webkit-appearance: none;
+  appearance: none;
   align-items: center;
   background: transparent;
   border: 0;
+  border-radius: 0;
+  box-shadow: none;
   color: inherit;
   cursor: pointer;
   display: flex;
+  float: none;
   gap: 10px;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
   justify-content: flex-start;
+  letter-spacing: normal;
+  line-height: inherit;
+  margin: 0;
+  max-width: none;
+  min-height: 0;
+  outline: none;
   padding: 16px 0;
+  position: static;
+  text-decoration: none;
   text-align: left;
+  text-transform: none;
+  transition: none;
+  white-space: normal;
   width: 100%;
+}
+
+.da-header:hover,
+.da-header:focus,
+.da-header:active {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 .da-accordion[data-icon-position="right"] .da-header {
