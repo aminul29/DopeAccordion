@@ -31,6 +31,14 @@
   }
 
   function animatePanel(panel, isOpen) {
+    if (!isOpen && panel.hidden) {
+      panel.style.transition = '';
+      panel.style.height = '0px';
+      panel.style.opacity = '0';
+      panel.style.overflow = 'hidden';
+      return;
+    }
+
     if (prefersReducedMotion) {
       panel.hidden = !isOpen;
       panel.style.transition = '';
@@ -118,6 +126,11 @@
     const panel = item.querySelector('.da-panel');
 
     if (!button || !panel) {
+      return;
+    }
+
+    const currentlyOpen = item.classList.contains('is-open');
+    if (currentlyOpen === isOpen) {
       return;
     }
 
