@@ -77,6 +77,33 @@
   line-height: 1.2;
 }
 
+.da-accordion[data-layout="top_image"] .da-header {
+  align-items: flex-start;
+}
+
+.da-accordion[data-layout="top_image"] .da-header-content {
+  align-items: flex-start;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-image-wrap {
+  display: inline-flex;
+  line-height: 0;
+  max-width: 240px;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-image {
+  display: block;
+  height: auto;
+  max-height: 72px;
+  max-width: 100%;
+  object-fit: contain;
+  width: auto;
+}
+
 .da-toggle-icon {
   color: #2563eb;
   display: inline-flex;

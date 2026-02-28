@@ -6,6 +6,8 @@ Custom Elementor accordion widget plugin with:
 - Per-image gallery links from WordPress Media Library attachment field
 - Link indicator icon when link exists
 - Accordion behavior controls (first open, multiple open, collapse)
+- Open all items by default option (initial state; users can still collapse)
+- Widget-level layout variants including a Top Image layout with per-item top image/logo
 - Style controls for container, header, content, and media cards
 - Smooth expand/collapse animation
 

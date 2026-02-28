@@ -104,6 +104,14 @@ class Dope_Accordion_Widget extends Widget_Base {
         );
 
         $repeater->add_control(
+            'item_top_image',
+            array(
+                'label' => esc_html__( 'Top Image (Top Image Layout)', 'dope-accordion' ),
+                'type'  => Controls_Manager::MEDIA,
+            )
+        );
+
+        $repeater->add_control(
             'item_gallery',
             array(
                 'label'       => esc_html__( 'Image Gallery', 'dope-accordion' ),
@@ -196,11 +204,36 @@ class Dope_Accordion_Widget extends Widget_Base {
         );
 
         $this->add_control(
+            'layout_variant',
+            array(
+                'label'   => esc_html__( 'Layout Variant', 'dope-accordion' ),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'default',
+                'options' => array(
+                    'default'   => esc_html__( 'Default', 'dope-accordion' ),
+                    'top_image' => esc_html__( 'Top Image', 'dope-accordion' ),
+                ),
+            )
+        );
+
+        $this->add_control(
             'first_item_open',
             array(
                 'label'        => esc_html__( 'First Item Open By Default', 'dope-accordion' ),
                 'type'         => Controls_Manager::SWITCHER,
                 'default'      => 'yes',
+                'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
+                'label_off'    => esc_html__( 'No', 'dope-accordion' ),
+                'return_value' => 'yes',
+            )
+        );
+
+        $this->add_control(
+            'open_all_by_default',
+            array(
+                'label'        => esc_html__( 'Open All Items By Default', 'dope-accordion' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'default'      => '',
                 'label_on'     => esc_html__( 'Yes', 'dope-accordion' ),
                 'label_off'    => esc_html__( 'No', 'dope-accordion' ),
                 'return_value' => 'yes',
@@ -598,6 +631,8 @@ class Dope_Accordion_Widget extends Widget_Base {
 
     protected function render(): void {
         $settings = $this->get_settings_for_display();
+        $layout_variant = ! empty( $settings['layout_variant'] ) ? $settings['layout_variant'] : 'default';
+        $open_all_by_default = ( ! empty( $settings['open_all_by_default'] ) && 'yes' === $settings['open_all_by_default'] );
 
         if ( empty( $settings['items'] ) || ! is_array( $settings['items'] ) ) {
             return;
@@ -613,6 +648,8 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'data-multiple-open'  => ( 'yes' === $settings['allow_multiple_open'] ) ? '1' : '0',
                 'data-allow-collapse' => ( 'yes' === $settings['allow_collapse'] ) ? '1' : '0',
                 'data-icon-position'  => ! empty( $settings['icon_position'] ) ? $settings['icon_position'] : 'left',
+                'data-layout'         => $layout_variant,
+                'data-open-all'       => $open_all_by_default ? '1' : '0',
             )
         );
 
@@ -624,14 +661,28 @@ class Dope_Accordion_Widget extends Widget_Base {
             $title        = isset( $item['item_title'] ) ? $item['item_title'] : '';
             $content      = isset( $item['item_content'] ) ? $item['item_content'] : '';
             $is_first     = 0 === $index;
-            $open_default = $is_first && ( 'yes' === $settings['first_item_open'] );
+            $open_default = $open_all_by_default || ( $is_first && ( 'yes' === $settings['first_item_open'] ) );
+            $top_image_url = ! empty( $item['item_top_image']['url'] ) ? $item['item_top_image']['url'] : '';
 
             echo '<div class="da-item' . ( $open_default ? ' is-open' : '' ) . '">';
             echo '<button class="da-header" id="' . esc_attr( $button_id ) . '" type="button" aria-controls="' . esc_attr( $panel_id ) . '" aria-expanded="' . ( $open_default ? 'true' : 'false' ) . '">';
 
             $this->render_toggle_icon( $settings, $open_default );
 
-            echo '<span class="da-title">' . esc_html( $title ) . '</span>';
+            if ( 'top_image' === $layout_variant ) {
+                echo '<span class="da-header-content">';
+
+                if ( ! empty( $top_image_url ) ) {
+                    echo '<span class="da-top-image-wrap">';
+                    echo '<img class="da-top-image" src="' . esc_url( $top_image_url ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
+                    echo '</span>';
+                }
+
+                echo '<span class="da-title">' . esc_html( $title ) . '</span>';
+                echo '</span>';
+            } else {
+                echo '<span class="da-title">' . esc_html( $title ) . '</span>';
+            }
             echo '</button>';
 
             echo '<div class="da-panel" id="' . esc_attr( $panel_id ) . '" role="region" aria-labelledby="' . esc_attr( $button_id ) . '"' . ( $open_default ? '' : ' hidden' ) . '>';

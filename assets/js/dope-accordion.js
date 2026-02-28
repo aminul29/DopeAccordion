@@ -151,6 +151,13 @@
 
     const allowMultiple = accordion.dataset.multipleOpen === '1';
     const allowCollapse = accordion.dataset.allowCollapse === '1';
+    const openAll = accordion.dataset.openAll === '1';
+
+    if (openAll) {
+      items.forEach(function (item) {
+        item.classList.add('is-open');
+      });
+    }
 
     items.forEach(function (item) {
       const button = item.querySelector('.da-header');
@@ -160,6 +167,9 @@
       }
 
       initializePanel(item);
+      const initialOpen = item.classList.contains('is-open');
+      button.setAttribute('aria-expanded', initialOpen ? 'true' : 'false');
+      updateIcon(item, initialOpen);
 
       button.addEventListener('click', function () {
         const isOpen = item.classList.contains('is-open');
