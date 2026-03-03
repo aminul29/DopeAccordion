@@ -77,55 +77,128 @@
   line-height: 1.2;
 }
 
-.da-accordion[data-layout="top_image"] .da-header {
-  align-items: flex-start;
-  padding: 6px 0 12px !important;
+.da-accordion[data-layout="top_image"] .da-item {
+  border-top: 0;
+  border-bottom: 1px solid #cfd4dc;
+  padding: 28px 0;
+}
+
+.da-accordion[data-layout="top_image"] .da-item + .da-item {
+  margin-top: 0;
+}
+
+.da-accordion[data-layout="top_image"] .da-item:last-child {
+  border-bottom: 0;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-item-layout {
+  display: block;
 }
 
 .da-accordion[data-layout="top_image"] .da-top-image-block {
   line-height: 0;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   max-width: 280px;
+  width: auto;
 }
 
 .da-accordion[data-layout="top_image"] .da-top-image {
   display: block;
   height: auto;
-  max-height: 80px;
+  max-height: 84px;
   max-width: 100%;
   object-fit: contain;
   width: auto;
 }
 
-.da-top-position {
-  color: #2d3748;
+.da-accordion[data-layout="top_image"] .da-top-item-content {
+  min-width: 0;
+}
+
+.da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-item-layout {
+  align-items: flex-start;
+  display: flex;
+  gap: 18px;
+}
+
+.da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-image-block {
+  flex: 0 0 84px;
+  margin: 2px 0 0;
+  width: 84px;
+}
+
+.da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-image {
+  width: 100%;
+}
+
+.da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-item-content {
+  flex: 1 1 auto;
+}
+
+.da-accordion[data-layout="top_image"] .da-header {
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 !important;
+}
+
+.da-accordion[data-layout="top_image"] .da-toggle-icon {
+  display: none;
+}
+
+.da-accordion[data-layout="top_image"] .da-title {
+  color: #1b2430;
+  line-height: 1.35;
+}
+
+.da-accordion[data-layout="top_image"] .da-content-wrap {
+  padding: 6px 0 0;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-position {
+  color: #2f3a4a;
   font-size: 18px;
   font-style: italic;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
   margin: 0 0 10px;
 }
 
-.da-top-description {
+.da-accordion[data-layout="top_image"] .da-top-description {
   margin: 0 0 12px;
 }
 
-.da-top-description .da-desc-preview,
-.da-top-description .da-desc-full {
+.da-accordion[data-layout="top_image"] .da-top-description .da-content {
+  color: #334155;
+  line-height: 1.55;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-description .da-content ul,
+.da-accordion[data-layout="top_image"] .da-top-description .da-content ol {
+  margin: 8px 0 0 1.05em;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-description .da-content a {
+  color: #1f5fd1;
+  font-style: italic;
+  text-decoration: none;
+}
+
+.da-accordion[data-layout="top_image"] .da-top-description .da-desc-preview,
+.da-accordion[data-layout="top_image"] .da-top-description .da-desc-full {
   margin: 0;
 }
 
-.da-top-description .da-desc-preview {
+.da-accordion[data-layout="top_image"] .da-top-description .da-desc-preview {
   display: inline;
 }
 
-.da-top-description .da-desc-preview p {
+.da-accordion[data-layout="top_image"] .da-top-description .da-desc-preview p {
   display: inline;
   margin: 0;
 }
 
-.da-top-description .da-desc-preview p:last-child,
-.da-top-description .da-desc-full p:last-child {
+.da-accordion[data-layout="top_image"] .da-top-description .da-desc-preview p:last-child,
+.da-accordion[data-layout="top_image"] .da-top-description .da-desc-full p:last-child {
   margin-bottom: 0;
 }
 
@@ -286,6 +359,15 @@
 }
 
 @media (max-width: 1024px) {
+  .da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-item-layout {
+    gap: 14px;
+  }
+
+  .da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-image-block {
+    flex-basis: 72px;
+    width: 72px;
+  }
+
   .da-media-wrap {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -296,7 +378,17 @@
     font-size: 20px;
   }
 
-  .da-top-position {
+  .da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-item-layout {
+    gap: 12px;
+  }
+
+  .da-accordion[data-layout="top_image"][data-top-image-position="left"] .da-top-image-block {
+    flex-basis: 60px;
+    margin-top: 0;
+    width: 60px;
+  }
+
+  .da-accordion[data-layout="top_image"] .da-top-position {
     font-size: 16px;
   }
 

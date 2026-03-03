@@ -116,7 +116,7 @@ class Dope_Accordion_Widget extends Widget_Base {
         $repeater->add_control(
             'item_top_image',
             array(
-                'label' => esc_html__( 'Top Image (Top Image Layout)', 'dope-accordion' ),
+                'label' => esc_html__( 'Layout Image (Image + Content Layout)', 'dope-accordion' ),
                 'type'  => Controls_Manager::MEDIA,
             )
         );
@@ -221,7 +221,23 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'default' => 'default',
                 'options' => array(
                     'default'   => esc_html__( 'Default', 'dope-accordion' ),
-                    'top_image' => esc_html__( 'Top Image', 'dope-accordion' ),
+                    'top_image' => esc_html__( 'Image + Content', 'dope-accordion' ),
+                ),
+            )
+        );
+
+        $this->add_control(
+            'top_image_position',
+            array(
+                'label'     => esc_html__( 'Image Position', 'dope-accordion' ),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'top',
+                'options'   => array(
+                    'top'  => esc_html__( 'Top', 'dope-accordion' ),
+                    'left' => esc_html__( 'Left', 'dope-accordion' ),
+                ),
+                'condition' => array(
+                    'layout_variant' => 'top_image',
                 ),
             )
         );
@@ -741,6 +757,8 @@ class Dope_Accordion_Widget extends Widget_Base {
     protected function render(): void {
         $settings = $this->get_settings_for_display();
         $layout_variant      = ! empty( $settings['layout_variant'] ) ? $settings['layout_variant'] : 'default';
+        $top_image_position  = ! empty( $settings['top_image_position'] ) ? (string) $settings['top_image_position'] : 'top';
+        $top_image_position  = in_array( $top_image_position, array( 'top', 'left' ), true ) ? $top_image_position : 'top';
         $limit_enabled       = ( ! empty( $settings['top_desc_limit_enabled'] ) && 'yes' === $settings['top_desc_limit_enabled'] );
         $desc_char_limit     = ! empty( $settings['top_desc_char_limit'] ) ? (int) $settings['top_desc_char_limit'] : 220;
         $desc_char_limit     = max( 20, $desc_char_limit );
@@ -763,6 +781,7 @@ class Dope_Accordion_Widget extends Widget_Base {
                 'data-allow-collapse' => ( 'yes' === $settings['allow_collapse'] ) ? '1' : '0',
                 'data-icon-position'  => ! empty( $settings['icon_position'] ) ? $settings['icon_position'] : 'left',
                 'data-layout'         => $layout_variant,
+                'data-top-image-position' => $top_image_position,
                 'data-open-all'       => $open_all_by_default ? '1' : '0',
                 'data-top-desc-limit-enabled' => $limit_enabled ? '1' : '0',
                 'data-top-desc-char-limit'    => (string) $desc_char_limit,
@@ -786,10 +805,16 @@ class Dope_Accordion_Widget extends Widget_Base {
 
             echo '<div class="da-item' . ( $open_default ? ' is-open' : '' ) . '">';
 
-            if ( $is_top_layout && ! empty( $top_image_url ) ) {
-                echo '<div class="da-top-image-block">';
-                echo '<img class="da-top-image" src="' . esc_url( $top_image_url ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
-                echo '</div>';
+            if ( $is_top_layout ) {
+                echo '<div class="da-top-item-layout">';
+
+                if ( ! empty( $top_image_url ) ) {
+                    echo '<div class="da-top-image-block">';
+                    echo '<img class="da-top-image" src="' . esc_url( $top_image_url ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
+                    echo '</div>';
+                }
+
+                echo '<div class="da-top-item-content">';
             }
 
             echo '<button class="da-header" id="' . esc_attr( $button_id ) . '" type="button" aria-controls="' . esc_attr( $panel_id ) . '" aria-expanded="' . ( $open_default ? 'true' : 'false' ) . '">';
@@ -816,6 +841,12 @@ class Dope_Accordion_Widget extends Widget_Base {
 
             echo '</div>';
             echo '</div>';
+
+            if ( $is_top_layout ) {
+                echo '</div>';
+                echo '</div>';
+            }
+
             echo '</div>';
         }
 
